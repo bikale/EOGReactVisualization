@@ -38,6 +38,7 @@ export default () => {
   );
 };
 
+
 const Weather = () => {
   const getLocation = useGeolocation();
   // Default to houston
