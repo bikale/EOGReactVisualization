@@ -20,13 +20,16 @@ import { createSlice, PayloadAction } from 'redux-starter-kit';
 
 export type MetricsList = [];
 
-const initialState = { metrics: [''] };
+const initialState = { metrics: [''], metricsSelected: '' };
 const slice = createSlice({
   name: 'weather',
   initialState,
   reducers: {
     storeMetrics: (state, action: PayloadAction<MetricsList>) => {
       state.metrics = action.payload;
+    },
+    selectedMetrics: (state, action) => {
+      state.metricsSelected = action.payload;
     },
   },
 });

@@ -14,6 +14,8 @@ import {
   MenuItem,
   FormHelperText,
   LinearProgress,
+  Grid,
+  Paper,
 } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { IState } from '../store';
@@ -30,6 +32,15 @@ const query = `
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    root: {
+      flexGrow: 1,
+    },
+    paper: {
+      padding: theme.spacing(2),
+      textAlign: 'center',
+      color: theme.palette.text.secondary,
+      height: '90%',
+    },
     formControl: {
       margin: theme.spacing(1),
       minWidth: 120,
@@ -52,10 +63,12 @@ const MetricSelector = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { metrics } = useSelector((state: IState) => state.metricsList);
-  console.log('whole store', metrics);
+  const [metricsSelected, setSelectedMetrics] = useState('');
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    // setMetrics(event.target.value as string);
+    setSelectedMetrics(event.target.value as string);
+
+    dispatch(actions.selectedMetrics(event.target.value as string));
   };
   const [result] = useQuery({
     query,
@@ -71,7 +84,7 @@ const MetricSelector = () => {
     const { getMetrics } = data;
     console.log(getMetrics);
     dispatch(actions.storeMetrics(getMetrics));
-  }, [data, error]);
+  }, [dispatch, data, error]);
 
   if (fetching) return <LinearProgress />;
 
