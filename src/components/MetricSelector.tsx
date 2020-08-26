@@ -78,7 +78,7 @@ const MetricSelector = () => {
   useEffect(() => {
     if (error) {
       console.log(error);
-      // dispatch(actions.weatherApiErrorReceived({ error: error.message }));
+      //
       return;
     }
     if (!data) return;

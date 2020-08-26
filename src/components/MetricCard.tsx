@@ -1,20 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { Provider, createClient, useQuery } from 'urql';
 import { actions } from '../Features/Dashboard/reducer';
-import {
-  CardHeader,
-  FormControl,
-  InputLabel,
-  makeStyles,
-  Select,
-  Theme,
-  createStyles,
-  MenuItem,
-  FormHelperText,
-  LinearProgress,
-  Grid,
-  Paper,
-} from '@material-ui/core';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { IState } from '../store';
 
@@ -41,7 +28,7 @@ export default () => {
 };
 
 const MetricCard = () => {
-  const { metricsSelected, currentTime } = useSelector((state: IState) => state.metricsList);
+  const { metricsSelected, currentTime, currentMeasurementValue } = useSelector((state: IState) => state.metricsList);
   const dispatch = useDispatch();
   const metricQuery = { metricName: metricsSelected, after: currentTime }; //1800000 => 30min
   const [result] = useQuery({
@@ -69,7 +56,14 @@ const MetricCard = () => {
   return (
     <Provider value={client}>
       <div>
-        {metricsSelected && <h3>{metricsSelected}</h3>}
+        {metricsSelected && (
+          <>
+            <h3>{metricsSelected}</h3>
+            <h1>
+              <strong>{currentMeasurementValue}</strong>
+            </h1>
+          </>
+        )}
         {!metricsSelected && <h3>Please select a metrics</h3>}
       </div>
     </Provider>

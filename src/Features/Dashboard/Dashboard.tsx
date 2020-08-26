@@ -56,7 +56,8 @@ function Dashboard() {
                         x: selectedMeasurements.map((list: { at: string }) => list.at),
                         y: selectedMeasurements.map((list: { value: string }) => list.value),
                         type: 'scatter',
-                        name: 'AAPL High',
+                        mode: 'lines',
+                        hovertemplate: `%{x}<extra></extra>` + `<br><i><b>${metricsSelected}</b> :%{y}</i>`,
                         line: { color: '#17BECF' },
                       },
                     ]}
@@ -64,6 +65,12 @@ function Dashboard() {
                       title: metricsSelected,
                       xaxis: {
                         type: 'date',
+                        title: 'Time',
+                        titlefont: {
+                          family: 'Arial, sans-serif',
+                          size: 15,
+                          color: 'lightgrey',
+                        },
                       },
                     }}
                   />
