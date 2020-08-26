@@ -19,6 +19,7 @@ import {
 } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { IState } from '../store';
+import { DeleteForever } from '@material-ui/icons';
 
 const client = createClient({
   url: 'https://react.eogresources.com/graphql',
@@ -91,13 +92,15 @@ const MetricSelector = () => {
   return (
     <FormControl className={classes.formControl}>
       <InputLabel id="metricsselected">Metrics</InputLabel>
-      <Select labelId="metricsselected" id="metricsselect" value={metrics} onChange={handleChange}>
+      <Select labelId="metricsselected" id="metricsselect" value={metricsSelected} onChange={handleChange}>
         <MenuItem value="">
           <em>None</em>
         </MenuItem>
 
         {metrics.map(list => (
-          <MenuItem value={list}>{list}</MenuItem>
+          <MenuItem key={list} value={list}>
+            {list}
+          </MenuItem>
         ))}
       </Select>
       <FormHelperText>select one of the metrics</FormHelperText>

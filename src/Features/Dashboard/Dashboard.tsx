@@ -4,6 +4,10 @@ import CardContent from '@material-ui/core/CardContent';
 import { CardHeader, createStyles, Grid, makeStyles, Paper, Theme } from '@material-ui/core';
 import MetricSelector from '../../components/MetricSelector';
 import MetricCard from '../../components/MetricCard';
+import { useDispatch, useSelector } from 'react-redux';
+
+import Plot from 'react-plotly.js';
+import { IState } from '../../store';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,6 +28,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 function Dashboard() {
   const classes = useStyles();
+  const { selectedMeasurements, metricsSelected } = useSelector((state: IState) => state.metricsList);
+
   return (
     <Card className={classes.card}>
       <CardHeader title="Please select metrics" />
@@ -41,11 +47,29 @@ function Dashboard() {
               </Paper>
             </Grid>
 
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <p>chart goes here</p>
-              </Paper>
-            </Grid>
+            {selectedMeasurements.length > 0 && (
+              <Grid item xs={12}>
+                <Paper className={classes.paper}>
+                  <Plot
+                    data={[
+                      {
+                        x: selectedMeasurements.map((list: { at: string }) => list.at),
+                        y: selectedMeasurements.map((list: { value: string }) => list.value),
+                        type: 'scatter',
+                        name: 'AAPL High',
+                        line: { color: '#17BECF' },
+                      },
+                    ]}
+                    layout={{
+                      title: metricsSelected,
+                      xaxis: {
+                        type: 'date',
+                      },
+                    }}
+                  />
+                </Paper>
+              </Grid>
+            )}
           </Grid>
         </div>
       </CardContent>
