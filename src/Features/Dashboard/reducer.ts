@@ -22,7 +22,7 @@ export type MetricsList = [];
 
 const initialState = {
   metrics: [''],
-  metricsSelected: '',
+  metricsSelected: [],
   currentTime: Date.now() - 1800000,
   selectedMeasurements: [],
   currentMeasurementValue: '',
@@ -40,7 +40,6 @@ const slice = createSlice({
     },
     storeSelectedMeasurements: (state, action) => {
       state.selectedMeasurements = action.payload;
-      state.currentMeasurementValue = action.payload[action.payload.length - 1]['value'];
     },
   },
 });

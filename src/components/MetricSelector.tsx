@@ -16,7 +16,10 @@ import {
   LinearProgress,
   Grid,
   Paper,
+  TextField,
 } from '@material-ui/core';
+import Chip from '@material-ui/core/Chip';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useDispatch, useSelector } from 'react-redux';
 import { IState } from '../store';
 import { DeleteForever } from '@material-ui/icons';
@@ -66,11 +69,6 @@ const MetricSelector = () => {
   const { metrics } = useSelector((state: IState) => state.metricsList);
   const [metricsSelected, setSelectedMetrics] = useState('');
 
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setSelectedMetrics(event.target.value as string);
-
-    dispatch(actions.selectedMetrics(event.target.value as string));
-  };
   const [result] = useQuery({
     query,
   });
@@ -91,18 +89,19 @@ const MetricSelector = () => {
 
   return (
     <FormControl className={classes.formControl}>
-      <InputLabel id="metricsselected">Metrics</InputLabel>
-      <Select labelId="metricsselected" id="metricsselect" value={metricsSelected} onChange={handleChange}>
-        <MenuItem value="">
-          <em>None</em>
-        </MenuItem>
+      <Autocomplete
+        multiple
+        id="tags-standard"
+        options={metrics}
+        getOptionLabel={option => option}
+        onChange={(event, newInputValue) => {
+          dispatch(actions.selectedMetrics(newInputValue));
+        }}
+        renderInput={params => (
+          <TextField {...params} variant="standard" label="Select" placeholder="Select measurments" />
+        )}
+      />
 
-        {metrics.map(list => (
-          <MenuItem key={list} value={list}>
-            {list}
-          </MenuItem>
-        ))}
-      </Select>
       <FormHelperText>select one of the metrics</FormHelperText>
     </FormControl>
   );

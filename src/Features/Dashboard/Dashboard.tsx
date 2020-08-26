@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
       height: '90%',
     },
     card: {
-      margin: '5% 25%',
+      margin: '5% 5%',
     },
   }),
 );
@@ -51,18 +51,16 @@ function Dashboard() {
               <Grid item xs={12}>
                 <Paper className={classes.paper}>
                   <Plot
-                    data={[
-                      {
-                        x: selectedMeasurements.map((list: { at: string }) => list.at),
-                        y: selectedMeasurements.map((list: { value: string }) => list.value),
-                        type: 'scatter',
-                        mode: 'lines',
-                        hovertemplate: `%{x}<extra></extra>` + `<br><i><b>${metricsSelected}</b> :%{y}</i>`,
-                        line: { color: '#17BECF' },
-                      },
-                    ]}
+                    data={selectedMeasurements.map((measurement: any) => ({
+                      x: measurement.measurements.map((list: { at: string }) => list.at),
+                      y: measurement.measurements.map((list: { value: string }) => list.value),
+                      type: 'scatter',
+                      mode: 'lines',
+                      hovertemplate: `%{x}<extra></extra>` + `<br><i><b>%{text.metric}</b> :%{y}</i>`,
+                      line: { color: '#17BECF' },
+                      text: measurement.measurements,
+                    }))}
                     layout={{
-                      title: metricsSelected,
                       xaxis: {
                         type: 'date',
                         title: 'Time',

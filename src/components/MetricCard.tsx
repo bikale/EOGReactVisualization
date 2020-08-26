@@ -9,12 +9,14 @@ const client = createClient({
   url: 'https://react.eogresources.com/graphql',
 });
 const query = `
-  query($input: MeasurementQuery) {
-    getMeasurements(input: $input) {
+  query($input: [MeasurementQuery]) {
+    getMultipleMeasurements(input: $input) {
+      measurements{ 
       metric
       at
       value
       unit
+      }
     }
    }
   `;
@@ -28,14 +30,18 @@ export default () => {
 };
 
 const MetricCard = () => {
-  const { metricsSelected, currentTime, currentMeasurementValue } = useSelector((state: IState) => state.metricsList);
+  const { metricsSelected, currentTime, currentMeasurementValue, selectedMeasurements } = useSelector(
+    (state: IState) => state.metricsList,
+  );
   const dispatch = useDispatch();
-  const metricQuery = { metricName: metricsSelected, after: currentTime }; //1800000 => 30min
+  const metricQuery = metricsSelected.map(metric => ({ metricName: metric, after: currentTime }));
+
   const [result] = useQuery({
     query,
     variables: {
       input: metricQuery,
     },
+    pause: metricsSelected.length == 0,
   });
   const { fetching, data, error } = result;
   useEffect(() => {
@@ -48,23 +54,27 @@ const MetricCard = () => {
       return;
     }
     if (!data) return;
-    const { getMeasurements } = data;
-    console.log(getMeasurements);
-    dispatch(actions.storeSelectedMeasurements(getMeasurements));
+    const { getMultipleMeasurements } = data;
+    console.log(data);
+    dispatch(actions.storeSelectedMeasurements(getMultipleMeasurements));
   }, [data, error]);
 
   return (
     <Provider value={client}>
       <div>
-        {metricsSelected && (
+        {selectedMeasurements.length > 0 ? (
           <>
-            <h3>{metricsSelected}</h3>
-            <h1>
-              <strong>{currentMeasurementValue}</strong>
-            </h1>
+            {selectedMeasurements.map((list: any) => (
+              <p>
+                {list.measurements[list.measurements.length - 1]['metric']}
+
+                <strong>{list.measurements[list.measurements.length - 1]['value']}</strong>
+              </p>
+            ))}
           </>
+        ) : (
+          <h3>Please select a metrics</h3>
         )}
-        {!metricsSelected && <h3>Please select a metrics</h3>}
       </div>
     </Provider>
   );
